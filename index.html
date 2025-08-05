@@ -1004,7 +1004,8 @@
             
             <div class="hierarchy-content">
                 <h3>Monarch Research Leadership Structure</h3>
-                <img src="https://i.imgur.com/8jQcL3r.png" alt="Organization Structure" class="hierarchy-image">
+                <!-- Updated image reference -->
+                <img src="Leadership.png" alt="Organization Structure" class="hierarchy-image">
                 <div style="margin-top: 20px;">
                     <a href="https://www.canva.com/design/DAGniWPu2lE/kkzz43mgtDBpQKq1SiJvxQ/view?utm_content=DAGniWPu2lE&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h99bf03b00c" target="_blank" class="btn">View Detailed Structure</a>
                 </div>
@@ -1060,22 +1061,27 @@
                 
                 <div class="contact-form">
                     <h3>Send Us a Message</h3>
-                    <form>
+                    <!-- Secure form using FormSubmit.co -->
+                    <form action="https://formsubmit.co/scott.sofian17@gmail.com" method="POST">
+                        <input type="hidden" name="_subject" value="New message from Monarch Research website">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="#contact">
+                        
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" id="name" placeholder="Your Name">
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" placeholder="Your Email">
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject</label>
-                            <input type="text" id="subject" placeholder="Subject">
+                            <input type="text" id="subject" name="subject" placeholder="Subject">
                         </div>
                         <div class="form-group">
                             <label for="message">Message</label>
-                            <textarea id="message" rows="5" placeholder="Your Message"></textarea>
+                            <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
                         </div>
                         <button type="submit" class="btn">Send Message</button>
                     </form>
@@ -1160,17 +1166,60 @@
             });
         });
         
-        // Form submission
+        // Form submission feedback
         const contactForm = document.querySelector('.contact-form form');
         if (contactForm) {
             contactForm.addEventListener('submit', function(e) {
+                // Show custom alert instead of default browser behavior
                 e.preventDefault();
+                
+                // Get form values
                 const name = this.querySelector('#name').value;
                 const email = this.querySelector('#email').value;
                 
                 if (name && email) {
-                    alert('Thank you for your message! We will get back to you soon.');
-                    this.reset();
+                    // Create a custom alert element
+                    const alertDiv = document.createElement('div');
+                    alertDiv.style.position = 'fixed';
+                    alertDiv.style.top = '20px';
+                    alertDiv.style.right = '20px';
+                    alertDiv.style.backgroundColor = '#4CAF50';
+                    alertDiv.style.color = 'white';
+                    alertDiv.style.padding = '20px';
+                    alertDiv.style.borderRadius = '5px';
+                    alertDiv.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                    alertDiv.style.zIndex = '10000';
+                    alertDiv.style.transition = 'all 0.5s ease';
+                    alertDiv.style.maxWidth = '350px';
+                    alertDiv.innerHTML = `
+                        <h3 style="margin-bottom: 10px;">Message Sent!</h3>
+                        <p>Thank you for your message. We'll get back to you soon.</p>
+                        <button style="background: white; color: #4CAF50; border: none; padding: 8px 15px; 
+                            border-radius: 4px; margin-top: 15px; cursor: pointer;">OK</button>
+                    `;
+                    
+                    document.body.appendChild(alertDiv);
+                    
+                    // Add event listener to the button
+                    alertDiv.querySelector('button').addEventListener('click', () => {
+                        alertDiv.style.transform = 'translateX(200%)';
+                        setTimeout(() => {
+                            document.body.removeChild(alertDiv);
+                        }, 500);
+                    });
+                    
+                    // Auto-remove after 5 seconds
+                    setTimeout(() => {
+                        if (document.body.contains(alertDiv)) {
+                            alertDiv.style.transform = 'translateX(200%)';
+                            setTimeout(() => {
+                                document.body.removeChild(alertDiv);
+                            }, 500);
+                        }
+                    }, 5000);
+                    
+                    // Submit the form after showing the message
+                    this.submit();
                 } else {
                     alert('Please fill in all required fields.');
                 }
